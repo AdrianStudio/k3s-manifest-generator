@@ -147,21 +147,28 @@ spec:
 
 ## Resource Limits
 
-When resource limits are enabled, the script applies fixed values optimised for Raspberry Pi 4 hardware. Adjust directly in `k3sgen.py` if your hardware differs.
+When enabled, the script applies fixed resource limits optimised for **Raspberry Pi 4** hardware. Adjust the values directly in `k3sgen.py` if your setup differs.
 
-| | Memory | CPU |
-|---|---|---|
-| Requests | 64Mi | 100m |
-| Limits | 128Mi | 200m |
+| Type | Memory | CPU |
+|------|--------|-----|
+| ![Requests](https://img.shields.io/badge/requests-minimum%20guaranteed-6DB33F) | `64Mi` | `100m` |
+| ![Limits](https://img.shields.io/badge/limits-maximum%20allowed-E74C3C) | `128Mi` | `200m` |
+
+> Requests define the minimum resources guaranteed to the container. Limits define the maximum it can consume before being throttled or evicted.
 
 ---
 
 ## Stack
 
-| Component | Role |
-|---|---|
-| K3s | Lightweight Kubernetes on 3x Raspberry Pi 4 |
-| ArgoCD | GitOps continuous deployment controller |
-| Gitea | Self-hosted Git repository |
-| Ingress NGINX | Traffic routing and host-based rules |
-| Pi-hole | Local DNS resolution for custom domain |
+| Component | Role | Badge |
+|-----------|------|-------|
+| K3s | Lightweight Kubernetes on 3x Raspberry Pi 4 | ![K3s](https://img.shields.io/badge/K3s-Kubernetes-326CE5?logo=kubernetes&logoColor=white) |
+| ArgoCD | GitOps continuous deployment controller | ![ArgoCD](https://img.shields.io/badge/ArgoCD-GitOps-EF7B4D?logo=argo&logoColor=white) |
+| Gitea | Self-hosted Git repository | ![Gitea](https://img.shields.io/badge/Gitea-Self--Hosted-609926?logo=gitea&logoColor=white) |
+| Ingress NGINX | Traffic routing and host-based rules | ![NGINX](https://img.shields.io/badge/NGINX-Ingress-009639?logo=nginx&logoColor=white) |
+| Pi-hole | Local DNS resolution for custom domain | ![Pi-hole](https://img.shields.io/badge/Pi--hole-DNS-96060C?logo=pihole&logoColor=white) |
+| Python | Manifest generation script | ![Python](https://img.shields.io/badge/Python-3.13+-blue?logo=python&logoColor=white) |
+
+---
+
+This project is part of a larger homelab where everything is built, documented, and automated from scratch. Feel free to use it, adapt it to your own cluster, and open an issue if you run into anything — happy to help.
