@@ -54,3 +54,114 @@ python k3sgen.py
 ```
 
 The script will prompt you for the service configuration:
+
+```
+Service name: hello-world
+Target namespace: homelab
+Container image (e.g., nginxdemos/hello:latest): nginxdemos/hello:latest
+Container port to expose: 80
+Number of replicas [default: 1]: 1
+Service type (ClusterIP / NodePort / LoadBalancer): ClusterIP
+Enable Ingress? (yes/no): yes
+Configure CPU/memory resource limits? (yes/no): yes
+```
+
+Once complete, push to Git and let ArgoCD sync:
+
+```bash
+cd your/homelab/repo
+git add .
+git commit -m "feat: add hello-world manifest"
+git push
+```
+
+---
+
+## Example Output
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  namespace: homelab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-world
+        image: nginxdemos/hello:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world
+  namespace: homelab
+spec:
+  type: ClusterIP
+  selector:
+    app: hello-world
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-ingress
+  namespace: homelab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hello-world.homelab
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-world
+            port:
+              number: 80
+```
+
+---
+
+## Resource Limits
+
+When resource limits are enabled, the script applies fixed values optimised for Raspberry Pi 4 hardware. Adjust directly in `k3sgen.py` if your hardware differs.
+
+| | Memory | CPU |
+|---|---|---|
+| Requests | 64Mi | 100m |
+| Limits | 128Mi | 200m |
+
+---
+
+## Stack
+
+| Component | Role |
+|---|---|
+| K3s | Lightweight Kubernetes on 3x Raspberry Pi 4 |
+| ArgoCD | GitOps continuous deployment controller |
+| Gitea | Self-hosted Git repository |
+| Ingress NGINX | Traffic routing and host-based rules |
+| Pi-hole | Local DNS resolution for custom domain |
