@@ -14,7 +14,7 @@ No more writing YAML by hand. Fill in the prompts, run the script, push to Git â
 
 ## GitOps Flow
 
-![GitOps Flow](gitops-flow.png)
+<img width="1080" height="639" alt="image" src="https://github.com/user-attachments/assets/e527cc57-e083-4162-ba8d-bbd87e575cbd" />
 
 The script sits at the start of the GitOps pipeline. Once the manifest is generated and pushed, ArgoCD detects the change and applies it to the cluster automatically â€” no manual `kubectl apply` required.
 
